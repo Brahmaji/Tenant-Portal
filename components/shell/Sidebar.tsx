@@ -98,7 +98,7 @@ export function Sidebar({
   const sections = buildSections();
 
   const baseClasses =
-    "flex h-screen w-64 shrink-0 flex-col border-r border-slate-200/70 bg-white/80 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/80";
+    "surface-smoky-vert relative flex h-screen w-64 shrink-0 flex-col border-r border-slate-200/70 backdrop-blur-xl dark:border-slate-800/80";
 
   const wrapClasses =
     variant === "fixed"
@@ -107,12 +107,38 @@ export function Sidebar({
 
   return (
     <aside className={wrapClasses}>
-      <div className="flex items-center gap-2.5 px-5 pb-4 pt-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient text-white shadow-glow">
-          <ShieldCheck className="h-5 w-5" strokeWidth={2.4} />
+      {/* Hairline brand strip on the right edge — subtle premium cue */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-cyan-400/40 to-transparent"
+      />
+      {/* Soft brand bloom near the top */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full bg-[radial-gradient(closest-side,rgba(6,182,212,0.18),transparent_70%)] blur-2xl dark:bg-[radial-gradient(closest-side,rgba(6,182,212,0.22),transparent_70%)]"
+      />
+      {/* Smoky dot-grid texture, masked so it fades out toward the middle */}
+      <div
+        aria-hidden
+        className="bg-dot-grid pointer-events-none absolute inset-0 opacity-[0.35] dark:opacity-[0.4]"
+        style={{
+          maskImage:
+            "linear-gradient(180deg, black 0%, transparent 35%, transparent 65%, black 100%)",
+          WebkitMaskImage:
+            "linear-gradient(180deg, black 0%, transparent 35%, transparent 65%, black 100%)",
+        }}
+      />
+
+      <div className="relative flex items-center gap-2.5 px-5 pb-4 pt-5">
+        <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient text-white shadow-glow">
+          <span
+            aria-hidden
+            className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/30 to-transparent opacity-60"
+          />
+          <ShieldCheck className="relative h-5 w-5" strokeWidth={2.4} />
         </div>
         <div className="leading-tight">
-          <div className="text-base font-bold tracking-tight">
+          <div className="text-base font-bold tracking-tight text-slate-900 dark:text-white">
             Leaze<span className="text-gradient">Sure</span>
           </div>
           <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
@@ -121,11 +147,11 @@ export function Sidebar({
         </div>
       </div>
 
-      <nav className="flex flex-1 flex-col gap-4 overflow-y-auto px-2.5 pb-3 pt-1 scrollbar-clean">
+      <nav className="relative flex flex-1 flex-col gap-4 overflow-y-auto px-2.5 pb-3 pt-1 scrollbar-clean">
         {sections.map((section, idx) => (
           <div key={idx} className="flex flex-col gap-0.5">
             {section.title ? (
-              <div className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
+              <div className="px-3 pb-1.5 pt-2 text-[12px] font-bold uppercase tracking-[0.14em] text-slate-900 dark:text-slate-100">
                 {section.title}
               </div>
             ) : null}
@@ -144,13 +170,17 @@ export function Sidebar({
           <Link
             href="/rent-reporting/manage"
             onClick={onNavigate}
-            className="group relative flex items-center gap-2 overflow-hidden rounded-xl border border-brand-blue/15 bg-brand-gradient-soft p-2.5 text-xs transition hover:border-brand-blue/30"
+            className="group relative flex items-center gap-2.5 overflow-hidden rounded-xl border border-cyan-200/60 bg-gradient-to-br from-cyan-50 via-white to-blue-50 p-2.5 text-xs shadow-[0_1px_0_rgba(255,255,255,0.6)_inset,0_4px_16px_-8px_rgba(37,99,235,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-300/80 hover:shadow-[0_1px_0_rgba(255,255,255,0.6)_inset,0_8px_22px_-10px_rgba(37,99,235,0.4)] dark:border-cyan-400/20 dark:from-cyan-500/10 dark:via-slate-900/40 dark:to-blue-500/10 dark:hover:border-cyan-400/40"
           >
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white text-brand-blue shadow-soft dark:bg-slate-900 dark:text-cyan-300">
+            <span
+              aria-hidden
+              className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover:translate-x-full dark:via-white/10"
+            />
+            <span className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand-gradient text-white shadow-soft">
               <Sparkles className="h-3.5 w-3.5" />
             </span>
-            <span className="leading-tight">
-              <span className="block font-semibold text-brand-ink dark:text-slate-100">
+            <span className="relative leading-tight">
+              <span className="block font-semibold text-slate-900 dark:text-slate-100">
                 Boost reporting
               </span>
               <span className="block text-[10px] text-slate-500 dark:text-slate-400">
@@ -182,38 +212,43 @@ function NavLink({
     <Link
       href={item.href}
       onClick={onNavigate}
+      aria-current={active ? "page" : undefined}
       className={cn(
-        "group relative flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+        "group relative flex items-center gap-2.5 rounded-lg px-2 py-1 text-[14px] font-semibold transition-all duration-200",
         active
-          ? "text-brand-ink dark:text-slate-50"
-          : "text-slate-500 hover:bg-slate-50 hover:text-brand-ink dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-100"
+          ? "border border-cyan-200/70 bg-gradient-to-r from-cyan-50/80 via-white/70 to-blue-50/60 text-slate-900 shadow-[0_1px_0_rgba(255,255,255,0.6)_inset,0_4px_14px_-8px_rgba(37,99,235,0.3)] dark:border-cyan-400/20 dark:from-cyan-500/10 dark:via-slate-900/40 dark:to-blue-500/10 dark:text-white"
+          : "border border-transparent text-slate-700 hover:translate-x-0.5 hover:border-slate-200/70 hover:bg-white/70 hover:text-slate-900 dark:text-slate-300 dark:hover:border-slate-700/70 dark:hover:bg-slate-900/60 dark:hover:text-white"
       )}
     >
       {active ? (
         <span
           aria-hidden
-          className="absolute inset-y-1.5 left-0 w-[3px] rounded-full bg-brand-gradient"
+          className="absolute inset-y-1.5 -left-px w-[3px] rounded-full bg-brand-gradient shadow-[0_0_10px_rgba(37,99,235,0.6)]"
         />
       ) : null}
-      <item.icon
+      <span
         className={cn(
-          "h-4 w-4 shrink-0 transition-colors",
+          "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors",
           active
-            ? "text-brand-blue dark:text-cyan-300"
-            : "text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300"
+            ? "bg-gradient-to-br from-cyan-100 to-blue-100 text-blue-700 dark:from-cyan-500/20 dark:to-blue-500/20 dark:text-cyan-200"
+            : "text-slate-500 group-hover:bg-slate-100 group-hover:text-slate-700 dark:text-slate-400 dark:group-hover:bg-slate-800 dark:group-hover:text-slate-200"
         )}
-        strokeWidth={active ? 2.2 : 1.9}
-      />
+      >
+        <item.icon
+          className="h-[18px] w-[18px]"
+          strokeWidth={active ? 2.2 : 2}
+        />
+      </span>
       <span className="flex-1 truncate">{item.label}</span>
       {item.badge ? (
         <span
           className={cn(
-            "inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-md px-1.5 text-[10px] font-bold",
+            "inline-flex h-5 min-w-[1.35rem] items-center justify-center rounded-md px-1.5 text-[11px] font-bold ring-1 ring-inset",
             item.tone === "brand"
-              ? "bg-brand-gradient text-white"
+              ? "bg-brand-gradient text-white ring-white/20"
               : active
-              ? "bg-brand-gradient-soft text-brand-blue dark:text-cyan-300"
-              : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+              ? "bg-white/80 text-blue-700 ring-cyan-200/70 dark:bg-slate-950/60 dark:text-cyan-300 dark:ring-cyan-400/20"
+              : "bg-slate-100/80 text-slate-700 ring-slate-200/60 dark:bg-slate-800/60 dark:text-slate-200 dark:ring-slate-700/60"
           )}
         >
           {item.badge}
@@ -244,25 +279,35 @@ function UserCard({ onNavigate }: { onNavigate?: () => void }) {
   }, [open]);
 
   return (
-    <div ref={wrapRef} className="relative border-t border-slate-200/70 p-2.5 dark:border-slate-800">
+    <div
+      ref={wrapRef}
+      className="relative border-t border-slate-200/60 p-2.5 dark:border-slate-800/70"
+    >
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
         aria-expanded={open}
         className={cn(
-          "group flex w-full items-center gap-2.5 rounded-xl border border-transparent px-2 py-2 text-left transition",
+          "group flex w-full items-center gap-2.5 rounded-xl border px-2 py-2 text-left transition-all duration-200",
           open
-            ? "border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900"
-            : "hover:border-slate-200 hover:bg-slate-50 dark:hover:border-slate-800 dark:hover:bg-slate-900"
+            ? "border-cyan-200/70 bg-gradient-to-r from-cyan-50/80 via-white/70 to-blue-50/60 shadow-[0_1px_0_rgba(255,255,255,0.6)_inset,0_4px_14px_-8px_rgba(37,99,235,0.3)] dark:border-cyan-400/20 dark:from-cyan-500/10 dark:via-slate-900/40 dark:to-blue-500/10"
+            : "border-transparent hover:border-slate-200/80 hover:bg-white/70 hover:shadow-[0_1px_0_rgba(255,255,255,0.6)_inset,0_4px_14px_-8px_rgba(15,23,42,0.12)] dark:hover:border-slate-700/70 dark:hover:bg-slate-900/60"
         )}
       >
-        <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-gradient text-xs font-bold text-white shadow-soft">
-          {tenant.initials}
-          <span className="absolute -right-0.5 -bottom-0.5 h-3 w-3 rounded-full bg-emerald-400 ring-2 ring-white dark:ring-slate-950" />
+        <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-gradient text-xs font-bold text-white shadow-glow">
+          <span
+            aria-hidden
+            className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/30 to-transparent opacity-60"
+          />
+          <span className="relative">{tenant.initials}</span>
+          <span className="absolute -right-0.5 -bottom-0.5 flex h-3 w-3">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-950" />
+          </span>
         </span>
         <span className="min-w-0 flex-1 leading-tight">
-          <span className="block truncate text-sm font-semibold">
+          <span className="block truncate text-sm font-semibold text-slate-900 dark:text-white">
             {tenant.firstName} {tenant.lastName}
           </span>
           <span className="flex items-center gap-1 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
@@ -272,7 +317,7 @@ function UserCard({ onNavigate }: { onNavigate?: () => void }) {
         </span>
         <ChevronUp
           className={cn(
-            "h-4 w-4 shrink-0 text-slate-400 transition",
+            "h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200",
             !open && "rotate-180"
           )}
         />

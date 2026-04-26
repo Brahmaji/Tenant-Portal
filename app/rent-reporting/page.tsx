@@ -5,14 +5,15 @@ import { useState } from "react";
 import {
   ArrowUpRight,
   Banknote,
+  Building2,
   CalendarDays,
   CheckCircle2,
   ClipboardCheck,
   Info,
   Lock,
+  PlusCircle,
   ShieldCheck,
   Sparkles,
-  TrendingUp,
   Upload,
 } from "lucide-react";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
@@ -23,7 +24,9 @@ import { ScoreGauge } from "@/components/rent/ScoreGauge";
 import { Stepper, type Step } from "@/components/rent/Stepper";
 import { CreditProjection } from "@/components/rent/CreditProjection";
 import { TrustCards } from "@/components/rent/TrustCards";
-import { UpgradeProButton } from "@/components/rent/UpgradeProButton";
+import { TailoredGoals } from "@/components/rent/TailoredGoals";
+import { ConsistencyBanner } from "@/components/rent/ConsistencyBanner";
+import { ComingSoonBanner } from "@/components/rent/ComingSoonBanner";
 import { creditTrend, rent, rentMonths } from "@/lib/mock";
 
 export default function RentReportingPage() {
@@ -139,6 +142,61 @@ export default function RentReportingPage() {
           </div>
         </div>
       </Card>
+
+      {/* ADD A PROPERTY — primary onboarding CTA */}
+      <section className="surface-smoky relative overflow-hidden rounded-2xl">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-[radial-gradient(closest-side,rgba(6,182,212,0.22),transparent_70%)] blur-2xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-20 -bottom-20 h-56 w-56 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.18),transparent_70%)] blur-2xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent"
+        />
+        <div className="relative grid gap-5 p-5 sm:p-7 lg:grid-cols-[auto_1fr_auto] lg:items-center lg:gap-8 lg:p-8">
+          <div className="flex shrink-0 items-center justify-center lg:block">
+            <span className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-gradient text-white shadow-glow">
+              <span
+                aria-hidden
+                className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/30 to-transparent opacity-60"
+              />
+              <Building2 className="relative h-7 w-7" strokeWidth={2.2} />
+            </span>
+          </div>
+          <div className="min-w-0">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-cyan-200/70 bg-gradient-to-r from-cyan-50 to-blue-50 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-blue-700 dark:border-cyan-400/20 dark:from-cyan-500/10 dark:to-blue-500/10 dark:text-cyan-300">
+              <PlusCircle className="h-3.5 w-3.5" />
+              Get started in 5 steps
+            </div>
+            <h3 className="mt-2 text-xl font-bold tracking-tight text-slate-900 sm:text-[22px] dark:text-white">
+              Add the property you&rsquo;re renting
+            </h3>
+            <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+              Connect your current lease so we can match your monthly payments
+              and start reporting them to Equifax. Verify ID, confirm your
+              details, add the lease, review, and activate — usually under 5
+              minutes.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 lg:flex-col lg:items-stretch">
+            <Link href="/rent-reporting/add-property">
+              <Button size="lg">
+                <PlusCircle className="h-4 w-4" />
+                Add a property
+              </Button>
+            </Link>
+            <Link href="/rent-reporting/manage">
+              <Button variant="outline" size="lg">
+                Manage existing
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* THIS MONTH — confirm rent paid */}
       <Card className="overflow-hidden">
@@ -356,47 +414,14 @@ export default function RentReportingPage() {
         </Card>
       </section>
 
-      {/* UPGRADE BAND */}
-      <Card className="relative overflow-hidden">
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-brand-gradient opacity-[0.95]"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-dot-grid opacity-25"
-        />
-        <div className="relative flex flex-col gap-5 p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-8">
-          <div className="max-w-md">
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] backdrop-blur">
-              <TrendingUp className="h-3 w-3" />
-              LeazeSure Pro
-            </div>
-            <h3 className="mt-3 text-xl font-bold tracking-tight">
-              Add 24 months of past rent.
-            </h3>
-            <p className="mt-1.5 text-sm text-white/85">
-              Backfill up to 2 years of verified rent payments and watch your
-              score jump in days, not months. Most users see <strong>+38 pts</strong>{" "}
-              from backfill alone.
-            </p>
-          </div>
-          <div className="flex flex-col items-stretch gap-3 sm:items-end">
-            <div className="sm:text-right">
-              <div className="flex items-baseline gap-1 sm:justify-end">
-                <span className="text-3xl font-bold leading-none tracking-tight tabular-nums">
-                  $9
-                </span>
-                <span className="text-sm font-semibold text-white/80">/ mo</span>
-              </div>
-              <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/70">
-                Cancel anytime · 7-day money back
-              </div>
-            </div>
-            <UpgradeProButton size="lg" label="Upgrade" />
-          </div>
-        </div>
-      </Card>
+      {/* TAILORED FOR YOUR GOALS — persona cards */}
+      <TailoredGoals />
+
+      {/* CONSISTENCY BANNER */}
+      <ConsistencyBanner />
+
+      {/* COMING SOON — Backfill 24 months */}
+      <ComingSoonBanner />
 
       {/* TRUST CARDS */}
       <section className="space-y-3">

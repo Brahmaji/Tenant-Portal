@@ -8,23 +8,19 @@ import {
   CalendarDays,
   CheckCircle2,
   Clock,
-  FileText,
   Info,
   Lock,
   ShieldCheck,
-  Sparkles,
-  Upload,
 } from "lucide-react";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Toggle } from "@/components/ui/Toggle";
 import { UploadZone, type UploadFile } from "@/components/upload/UploadZone";
 import { YearStrip } from "@/components/rent/YearStrip";
 import { TrustCards } from "@/components/rent/TrustCards";
-import { UpgradeProButton } from "@/components/rent/UpgradeProButton";
-import { documents, rentMonths } from "@/lib/mock";
+import { ComingSoonBanner } from "@/components/rent/ComingSoonBanner";
+import { rentMonths } from "@/lib/mock";
 import { cn } from "@/lib/cn";
 
 const monthLabel = [
@@ -83,9 +79,6 @@ const docCategories = [
 export default function ManageReportingPage() {
   const periodOptions = useMemo(() => buildPeriodOptions(), []);
   const [submitted, setSubmitted] = useState(0);
-
-  const verifiedDocs = documents.filter((d) => d.status === "verified");
-  const pendingDocs = documents.filter((d) => d.status !== "verified");
 
   const totalRequired = docCategories.reduce((n, c) => n + c.required, 0);
   const totalHave = docCategories.reduce((n, c) => n + c.have, 0);
@@ -281,66 +274,8 @@ export default function ManageReportingPage() {
         </CardBody>
       </Card>
 
-      {/* DOC LIBRARY */}
-      <Card>
-        <CardHeader
-          title="On file"
-          description="These documents are linked to your Tenant Passport and reused across applications."
-          action={
-            <Link
-              href="/documents"
-              className="text-xs font-semibold text-brand-blue hover:underline dark:text-cyan-300"
-            >
-              Open Documents library →
-            </Link>
-          }
-        />
-        <CardBody className="space-y-2">
-          {[...verifiedDocs, ...pendingDocs].map((d) => (
-            <DocRow key={d.id} {...d} />
-          ))}
-        </CardBody>
-      </Card>
-
-      {/* UPGRADE BAND (no gateway-related copy) */}
-      <Card className="relative overflow-hidden">
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-brand-gradient opacity-95"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-dot-grid opacity-25"
-        />
-        <div className="relative flex flex-col gap-5 p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-8">
-          <div className="max-w-xl">
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] backdrop-blur">
-              <Sparkles className="h-3 w-3" /> LeazeSure Pro
-            </div>
-            <h3 className="mt-3 text-xl font-bold tracking-tight">
-              Backfill 24 months of rent. Skip the wait.
-            </h3>
-            <p className="mt-1.5 text-sm text-white/85">
-              Verify older rent payments and add up to 2 years of history to your
-              file. Pro users average <strong>+38 pts</strong> from backfill alone.
-            </p>
-          </div>
-          <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-5">
-            <div className="sm:text-right">
-              <div className="flex items-baseline gap-1 sm:justify-end">
-                <span className="text-3xl font-bold leading-none tracking-tight tabular-nums">
-                  $9
-                </span>
-                <span className="text-sm font-semibold text-white/80">/ mo</span>
-              </div>
-              <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/70">
-                Cancel anytime · 7-day money back
-              </div>
-            </div>
-            <UpgradeProButton size="lg" label="Upgrade" />
-          </div>
-        </div>
-      </Card>
+      {/* COMING SOON — Backfill 24 months */}
+      <ComingSoonBanner />
 
       {/* TRUST CARDS — premium stat cards */}
       <section className="space-y-3">
@@ -417,59 +352,3 @@ function StatusTile({
   );
 }
 
-function DocRow({
-  name,
-  type,
-  size,
-  uploaded,
-  status,
-}: {
-  name: string;
-  type: string;
-  size: string;
-  uploaded: string;
-  status: "verified" | "pending" | "missing";
-}) {
-  const statusCfg = {
-    verified: { tone: "success" as const, label: "Verified", action: null },
-    pending: {
-      tone: "warning" as const,
-      label: "Pending review",
-      action: null,
-    },
-    missing: {
-      tone: "danger" as const,
-      label: "Missing",
-      action: "Upload",
-    },
-  } as const;
-  const s = statusCfg[status];
-
-  return (
-    <div
-      className={cn(
-        "flex items-center gap-3 rounded-xl border p-3 transition",
-        "border-slate-200/70 hover:border-slate-300 dark:border-slate-800 dark:hover:border-slate-700"
-      )}
-    >
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-gradient-soft text-brand-blue ring-1 ring-brand-blue/15 dark:text-cyan-300">
-        <FileText className="h-4 w-4" />
-      </span>
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center justify-between gap-2">
-          <div className="truncate text-sm font-semibold">{name}</div>
-          <Badge tone={s.tone}>{s.label}</Badge>
-        </div>
-        <div className="text-[11px] text-slate-500 dark:text-slate-400">
-          {type} · {size} · uploaded {uploaded}
-        </div>
-      </div>
-      {s.action ? (
-        <Button variant="outline" size="sm">
-          <Upload className="h-3.5 w-3.5" />
-          {s.action}
-        </Button>
-      ) : null}
-    </div>
-  );
-}
